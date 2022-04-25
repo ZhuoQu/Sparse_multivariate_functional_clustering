@@ -17,4 +17,4 @@ To obtain Figure 9, run final_cyclone_01.R
 
 To obtain Figure 10, run final_cyclone_02.R
 
-In case you need help in obtaining the original hurricane data, please contact me (zhuo.qu@kaust.edu.sa).
+In case you need help in obtaining the original hurricane data and running final_cyclone_00.R-final_cyclone_02.R, please contact me (zhuo.qu@kaust.edu.sa).
