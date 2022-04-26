@@ -20,4 +20,8 @@ To obtain Figure 8, run final_cyclone_00.R and final_cyclone_01.R
 To obtain Figure 9, run final_cyclone_02.R
 -------------------------------------------------------------------------
 
-In case you need help in obtaining the original hurricane data (https://data.humdata.org/dataset/archive-of-global-tropical-cyclone-tracks-1980-may-2019) and running final_cyclone_00.R-final_cyclone_02.R, please contact me (zhuo.qu@kaust.edu.sa).
+In case you need help in the following items:
+1. obtaining the original hurricane data (https://data.humdata.org/dataset/archive-of-global-tropical-cyclone-tracks-1980-may-2019)
+2. running final_cyclone_00.R-final_cyclone_02.R
+
+Please contact me (zhuo.qu@kaust.edu.sa).
