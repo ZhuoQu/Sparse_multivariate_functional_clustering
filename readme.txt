@@ -1,3 +1,8 @@
+The codes are the supplementary codes in the paper: Robust Two-Layer Partition Clustering of Sparse Multivariate Functional Data.
+
+The following Figures 1-9 are the corresponding figures in the aforementioned paper. The paper will be available in Arxiv soon.
+-----------------------------------------------------------------------
+
 To obtain Figure 1, run elastic_time_distance_visualize.R
 
 To obtain Figure 2, run cluster_example.R
@@ -11,10 +16,9 @@ To obtain Figure 5, run plot_sparseness_setting.R (for Figure 5 in the manuscrip
 
 To obtain Figure 6 & 7, run plotsimulation.R (we can also obtain the figures of the simulation performance for other scenarios, which are shown in the Supplementary Material)
 
-To obtain Figure 8, run final_cyclone_00.R
+To obtain Figure 8, run final_cyclone_00.R and final_cyclone_01.R 
 
-To obtain Figure 9, run final_cyclone_01.R
-
-To obtain Figure 10, run final_cyclone_02.R
+To obtain Figure 9, run final_cyclone_02.R
+-------------------------------------------------------------------------
 
 In case you need help in obtaining the original hurricane data and running final_cyclone_00.R-final_cyclone_02.R, please contact me (zhuo.qu@kaust.edu.sa).
