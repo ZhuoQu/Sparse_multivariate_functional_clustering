@@ -1,6 +1,6 @@
 The codes are the supplementary codes in the paper: Robust Two-Layer Partition Clustering of Sparse Multivariate Functional Data.
 
-The following Figures 1-9 are the corresponding figures in the aforementioned paper. The paper will be available in Arxiv soon.
+The following Figures 1-9 are the corresponding figures in the aforementioned paper. The paper is available in Arxiv(https://arxiv.org/pdf/2204.12135v1.pdf).
 -----------------------------------------------------------------------
 
 To obtain Figure 1, run elastic_time_distance_visualize.R
