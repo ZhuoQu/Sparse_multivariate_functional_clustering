@@ -1,9 +1,21 @@
+packages = c("dbscan", "gdata")
+## Now load or install&load all
+package_check <- lapply(
+  packages,
+  FUN = function(x) {
+    if (!require(x, character.only = TRUE)) {
+      install.packages(x, dependencies = TRUE)
+      library(x, character.only = TRUE)
+    }
+  }
+)
 source("clust_dbc_distance.R")
 source("clust_hierarchical_distance.R")
 source("clust_kmedoids_distance.R")
 source("clust_funhddc.R")
 
-compare_clustering_method <- function(distance_matrix, outlier_nb, run_time_dist, pd, pc, minprop, alpha_c, optim_index) {
+compare_clustering_method <- function(distance_matrix, outlier_nb, run_time_dist, 
+                                      pd, pc, minprop, alpha_c, optim_index) {
   
     standard_label <- rep(1:clusternumber, each = n / clusternumber)
     if (length(outlier_nb) > 0) {
@@ -14,7 +26,8 @@ compare_clustering_method <- function(distance_matrix, outlier_nb, run_time_dist
   ################################### dbc
   start_time_dbc <- Sys.time()
   
-  clust_procedure <- clust_dbc_distance(distance_matrix, standard_label, minprop, alpha_c, optim_index)
+  clust_procedure <- clust_dbc_distance(distance_matrix, standard_label, minprop, 
+                                        alpha_c, optim_index)
   empiricallabel_dbc <- clust_procedure[[1]]
   end_time_dbc <- Sys.time()
   value_dbc <- clust_procedure[[3]]
@@ -46,6 +59,28 @@ compare_clustering_method <- function(distance_matrix, outlier_nb, run_time_dist
   end_time_k_medoids <- Sys.time()
   run_time_k_medoids <- difftime(end_time_k_medoids, start_time_k_medoids, units = "secs") + 
     run_time_dist
+  ########################## DBSCAN
+  start_time_dbscan <- Sys.time()
+  optim_theta <- clust_procedure[[2]]
+  eps <- quantile(unlist(upperTriangle(distance_matrix)), optim_theta)
+  x <- matrix(rnorm(n * 5), nrow = n)
+  y <- dist(x)
+  lower_dis <- lowerTriangle(distance_matrix, diag = FALSE)
+  for (dis_ind in 1:length(lower_dis)) {
+    y[dis_ind] <- lower_dis[dis_ind]
+  }
+  dbscan_result <- dbscan(y, eps, minPts = nrow(distance_matrix) * minprop)
+  cluster_result <- dbscan_result$cluster
+  sign_out <- which(cluster_result == 0)
+  clust_label <- max(cluster_result)
+  cluster_result[sign_out] <- (clust_label + 1): (clust_label + length(sign_out))
+  value_dbscan <- adjustedRandIndex(standard_label, cluster_result)
+  end_time_dbscan <- Sys.time()
+  
+  run_time_dbscan <- end_time_dbscan - start_time_dbscan + run_time_dbc
+  
+  p_c_dbscan <- length(intersect(which(dbscan_result$cluster == 0), outlier_nb)) / length(outlier_nb)
+  p_f_dbscan <- length(setdiff(which(dbscan_result$cluster == 0), outlier_nb)) / (n - length(outlier_nb))
   
   ############################ funHDDC method
   start_time_funhddc <- Sys.time()
@@ -65,24 +100,30 @@ compare_clustering_method <- function(distance_matrix, outlier_nb, run_time_dist
   
   ################## 
   result <- c(value_dbc, 
+              value_dbscan,
               value_hierarchical,
               value_kmedoids,
               value_funhddc,
               run_time_dbc, 
+              run_time_dbscan,
               run_time_hierarchical,  
               run_time_k_medoids, 
               run_time_funhddc,
-              pc_dbc = p_c_dbc, pf_dbc = p_f_dbc)
+              p_c_dbc, p_f_dbc,
+              p_c_dbscan, p_f_dbscan)
   
-  names(result) <- c(paste("ARI", "_dbc", sep = ""), 
-                     paste("ARI", "_hierarchical", sep=""), 
+  names(result) <- c(paste("ARI", "_dbc", sep = ""),
+                     paste("ARI", "_dbscan", sep = ""), 
+                     paste("ARI", "_hierarchical", sep = ""), 
                      paste("ARI", "_kmedoids", sep=""), 
                      paste("ARI", "_funhddc", sep=""),
                      "run_time_dbc", 
+                     "run_time_dbscan",
                      "run_time_hierarchical", 
                      "run_time_kmedoids", 
                      "run_time_funhddc", 
-                     "pc_dbc", "pf_dbc")
+                     "pc_dbc", "pf_dbc", 
+                     "pc_dbscan", "pf_dbscan")
   return (result)
 }
 

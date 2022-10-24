@@ -1,7 +1,8 @@
 source("clust_theta.R")
 
-find_optimal_theta <- function(distance_matrix, standard_label, minprop, optim_index, alpha_c) {
-  theta_candidate <- seq(0.01, 0.3, by = 0.01)
+find_optimal_theta <- function(distance_matrix, standard_label, minprop, 
+                               optim_index, alpha_c) {
+  theta_candidate <- seq(0.01, 0.25, by = 0.01)
   clust_dataframe <- t(sapply(theta_candidate, function(theta) {
     clust_result <- clust_theta(distance_matrix, standard_label, minprop, theta, alpha_c)
   }))

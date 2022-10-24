@@ -10,6 +10,8 @@ package_check <- lapply(
   }
 )
 clust_funhddc <- function (pd, pc) {
+  n <- length(pd)
+  nbvar <- ifelse(class(pd[[1]]$y)[1] == "numeric", 1, length(pd[[1]]$y[1, ]))
   if (pc < 0.2) {
     basisobj <- create.bspline.basis(c(0,1), nbasis = 15)
   } else if (pc < 0.5) {
@@ -27,32 +29,20 @@ clust_funhddc <- function (pd, pc) {
       return (val)
     })
     yfd <- Data2fd(t, y)
-    funhddc_result <- funHDDC(yfd, K = 2:(sqrt(n / 2) + 5))
     
   } else {
     
-  y1 <- sapply(1:n, function(l){   
-    result1 <- smooth.basis(pd[[l]]$argvals, pd[[l]]$y[,1], basisobj)
-    val <- predict(result1,t)
+  yfd <- lapply(1:nbvar, function(num) {
+    temp <- sapply(1:n, function(l){   
+    result1 <- smooth.basis(pd[[l]]$argvals, pd[[l]]$y[, num], basisobj)
+    val <- predict(result1, t)
     return (val)
   })
-  
-  y2 <- sapply(1:n, function(l){   
-    result1 <- smooth.basis(pd[[l]]$argvals, pd[[l]]$y[, 2], basisobj)
-    val <- predict(result1,t)
-    return (val)
-  })
-  
-  y3 <- sapply(1:n, function(l){   
-    result1 <- smooth.basis(pd[[l]]$argvals, pd[[l]]$y[, 3], basisobj)
-    val <- predict(result1,t)
-    return (val)
-  })
-  yfd1 <- Data2fd(t, y1)
-  yfd2 <- Data2fd(t, y2)
-  yfd3 <- Data2fd(t, y3)
-  
-  funhddc_result <- funHDDC(list(yfd1, yfd2, yfd3), K = 2:(sqrt(n / 2) + 5))
+    Data2fd(t, temp)
+    })
   }
+  
+  funhddc_result <- funHDDC(yfd, K = 2:(sqrt(n / 2) + 5))
+  
   return (funhddc_result)
 }

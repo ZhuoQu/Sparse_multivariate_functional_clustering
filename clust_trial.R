@@ -19,9 +19,9 @@ source("clust_kmedoids_distance.R")
 source("clust_funhddc.R")
 source("compare_clustering_method.R")
 
-clust_trial <- function(scenario, pc, minprop, alpha_c, assess_methods, optim_index) {
+clust_trial <- function(listresult, minprop, alpha_c, assess_methods, optim_index) {
   n <- nrow(scenario[[1]][[1]])
-  listresult <- sparsify_scenario(ps, pc, scenario)
+  
   if (assess_methods == "multivariate") {
     pd <- listresult[[1]]
   } else if (assess_methods == "univariate 1") {
@@ -31,15 +31,18 @@ clust_trial <- function(scenario, pc, minprop, alpha_c, assess_methods, optim_in
   } else if (assess_methods == "univariate 3") {
     pd <- listresult[[4]]
   } 
+  
   outlier_nb <- scenario[[2]]
   #################################### calculation of ETD distance
-  start_time_dist <- Sys.time()
-  distance_matrix <- distance_mfd(pd)
-  end_time_dist <- Sys.time()
-  run_time_dist <- difftime(end_time_dist, start_time_dist, units = "secs")
+  start_time_etd <- Sys.time()
+  distance_matrix_etd <- distance_mfd(pd, distance_measure = "ETD")
+  end_time_etd <- Sys.time()
+  run_time_etd <- difftime(end_time_etd, start_time_etd, units = "secs")
   
-  result <- compare_clustering_method(distance_matrix, outlier_nb, run_time_dist, pd, pc, minprop, alpha_c, optim_index)
-  return (result)
+  result_etd <- compare_clustering_method(distance_matrix_etd, outlier_nb, run_time_etd,
+                                      pd, pc, minprop, alpha_c, optim_index)
+  
+  return (result_etd)
 }
 
 # multi_result<-clust_trial(scenario, pc, "multivariate", "silhouette")

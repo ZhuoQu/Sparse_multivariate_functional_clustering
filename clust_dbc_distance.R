@@ -18,7 +18,8 @@ source("02_algorithm_clustering.R")
 source("03_algorithm_find_outlier.R")
 
 clust_dbc_distance <- function(distance_matrix, standard_label, minprop, alpha_c, optim_index) {
-  theta_change <- find_optimal_theta(distance_matrix, standard_label, minprop, optim_index, alpha_c)
+  theta_change <- find_optimal_theta(distance_matrix, standard_label, minprop, 
+                                     optim_index, alpha_c)
   ### optimize parameters
   optim_theta <- theta_change$optimal_theta
   neighbor_mat_alg1 <- findneighbours(distance_matrix, optim_theta)  # algorithm 1

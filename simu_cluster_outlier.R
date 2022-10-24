@@ -23,17 +23,18 @@ source("clust_trial.R")
 # con_sce <- 4
 max_tries <- 4
 
+
 sim_cluster_outlier <- mclapply(1:repeattimes, function (simr) {
   sim_scenario <- lapply(1:length(scenario_type), function(sce) {
     variat <- scenario_type[sce]
-    
   result <- sapply(1: length(contam_types), function (con_sce) {
-    cat(sce / length(scenario_type) * con_sce / length(contam_types), sep = "\n")
+    cat(sce, "-", con_sce,"\n", sep = "")
     #### generate one simulation scenario
     set.seed(simr)
     scenario <- cluster_generation(nbvar, n, nbtime,
                                    contamination_level, contam_types[con_sce], 
                                    clusternumber, variat)
+    listresult <- sparsify_scenario(ps, pc, scenario)
     ##############################==============================
    
     res <- simpleError("Fake error to start")
@@ -41,7 +42,7 @@ sim_cluster_outlier <- mclapply(1:repeattimes, function (simr) {
     # Sys.sleep(2*counter)
     while(inherits(res, "error") & counter < max_tries) { 
       res <- tryCatch({ 
-        multi_result <- clust_trial(scenario, pc, minprop, alpha_c, "multivariate", "silh")
+        multi_result <- clust_trial(listresult, minprop, alpha_c, "multivariate", "silh")
       },  error = function(e) e)
       counter <- counter + 1
     }
@@ -51,7 +52,7 @@ sim_cluster_outlier <- mclapply(1:repeattimes, function (simr) {
     # Sys.sleep(2*counter)
     while(inherits(res, "error") & counter < max_tries) { 
       res <- tryCatch({ 
-        var1_result <- clust_trial(scenario, pc, minprop, alpha_c, "univariate 1", "silh")
+        var1_result <- clust_trial(listresult, minprop, alpha_c, "univariate 1", "silh")
       },  error = function(e) e)
       counter <- counter + 1
     }
@@ -61,7 +62,7 @@ sim_cluster_outlier <- mclapply(1:repeattimes, function (simr) {
     # Sys.sleep(2*counter)
     while (inherits(res, "error") & counter < max_tries) { 
       res <- tryCatch({ 
-        var2_result <- clust_trial(scenario, pc, minprop, alpha_c, "univariate 2", "silh")
+        var2_result <- clust_trial(listresult, minprop, alpha_c, "univariate 2", "silh")
       },  error = function(e) e)
       counter <- counter + 1
     }
@@ -71,12 +72,13 @@ sim_cluster_outlier <- mclapply(1:repeattimes, function (simr) {
     # Sys.sleep(2*counter)
     while (inherits(res, "error") & counter < max_tries) { 
       res <- tryCatch({ 
-        var3_result <- clust_trial(scenario, pc, minprop, alpha_c, "univariate 3", "silh")
+        var3_result <- clust_trial(listresult, minprop, alpha_c, "univariate 3", "silh")
       },  error = function(e) e)
       counter <- counter + 1
     }
     
-    temp <- c(multi_result, var1_result, var2_result, var3_result)
+    temp <- c(multi_result, var1_result, 
+              var2_result, var3_result)
     return (temp)
   }
   )
@@ -87,7 +89,8 @@ sim_cluster_outlier <- mclapply(1:repeattimes, function (simr) {
 
 
 #apply(sim_cluster_outlier_multi_compare, 1, mean)
-save(sim_cluster_outlier, file = paste("sim_cluster_outlier_0308_", 100 * pc, "%.RData", sep = ""))
+save(sim_cluster_outlier, 
+     file = paste("sim_cluster_outlier_0924_", 100 * pc, "%.RData", sep = ""))
 
 # lapply(1: length(sim_cluster_outlier), function(k) {
 #   lapply(1:length(contam_types), function(c) {

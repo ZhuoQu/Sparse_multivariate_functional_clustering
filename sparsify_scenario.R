@@ -1,4 +1,8 @@
 sparsify_scenario <- function(ps, pc, scenario) {
+  ## ps is a parameter specifying the proportion of sparseness among samples
+  ## pc is a parameter specifying the proportion of sparseness among curves with missing values
+  ## scenario is a list with the data and the outlier index
+  ## the first list in scenario is with length p, and each sublist is a n * nbtime matrix.
   n <- nrow(scenario[[1]][[1]])
   nbvar <- length(scenario[[1]])
   nbtime <- ncol(scenario[[1]][[1]])

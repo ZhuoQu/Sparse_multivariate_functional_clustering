@@ -1,5 +1,5 @@
 
-distance_mfd <- function(pd) {
+distance_mfd <- function(pd, distance_measure) {
   ### We assume that pd is a list. Each sublist is a list with three components: argvals, subj and y ( a matrix of length|t| * variable numbers)
   DO <- lapply(pd, function(k) {k$y})
   n <- length(pd)
@@ -34,12 +34,27 @@ distance_mfd <- function(pd) {
     } else {
       difference <- DO[[rowindex]][time_r_index] - DO[[colindex]][time_c_index]
     }
-    if (class(difference) == "numeric" && nbvar > 1) {
-      val <- sqrt(sum(difference^2))
-    } else if (class(difference) == "numeric" && nbvar == 1) {
-      val <- max(abs(difference))
+    if (class(difference)[1] == "numeric" ###only one observation
+        ) {
+      if (distance_measure == "L^2") {
+        val <- sqrt(sum(difference^2))
+      } 
+      if (distance_measure == "L^1") {
+        val <- sum(abs(difference))
+      }
+      if (distance_measure == "L^inf") {
+        val <- max(abs(difference))
+      }
     } else {
-      val <- max(apply(difference, 1, function(k) { sqrt(sum(k^2)) } ), na.rm = TRUE)
+      if (distance_measure == "L^2") {
+        val <- max(apply(difference, 1, function(k) { sqrt(sum(k^2))} ), na.rm = TRUE)
+      } 
+      if (distance_measure == "L^1") {
+        val <- max(apply(difference, 1, function(k) { sum(abs(k))} ), na.rm = TRUE)
+      }
+      if (distance_measure == "L^inf") {
+        val <- max(apply(difference, 1, function(k) { max(abs(k))} ), na.rm = TRUE)
+      }
     }
     return (val)
   }

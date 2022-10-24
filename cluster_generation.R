@@ -15,7 +15,7 @@ generate_cluster <- function(nbvar, n, nbtime, clusternumber, variat) {
       
       if (variat == "shift") {
         
-        val <- 6* cos((l + k) / 2 * pi * (t + 0.2 * ran * i))
+        val <- 6 * cos((l + k) / 2 * pi * (t + 0.2 * ran * i))
       } else if (variat == "amplitude") {
         r <- ifelse(rbinom(1, 1, 0.5) < 1, -1, 1)
         if (i < clusternumber) {
@@ -58,7 +58,7 @@ generate_cluster <- function(nbvar, n, nbtime, clusternumber, variat) {
         } else if (k == 1 && i == 3) {
           val <- 5 * t + sin(t * (5 * 2 * pi))
         } else if (k==2 && i==1) {
-          val <- 11 * t^2
+          val <- 11 * t ^ 2
         } else if (k==2 && i==2) {
           val <- 7 * t
         } else if (k==2 && i==3) {

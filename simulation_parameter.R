@@ -14,7 +14,7 @@ contam_types_title <- c("Pure Magnitude Outlier", "Peak Magnitude Outlier", "Par
 
 ps <- 1
 
-minprop <- 0.05
+minprop <- 0.1
 alpha_c <- 0.85
 
 pc <- 0

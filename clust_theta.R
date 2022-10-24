@@ -26,12 +26,19 @@ clust_theta <- function(distance_matrix, standard_label, minprop, theta, alpha_c
   clusterlabel <- function(cluster) {
     clust <- final_cluster$clust
     isolate <- final_cluster$isolate
-    empirical_label <- rep(0, nrow(distance_matrix))
-    for (cl in 1:length(clust)) {
-      empirical_label[clust[[cl]]$element] <- cl
+    clustnb <- length(clust)
+    empirical_label <- rep(0, n)
+    if (clustnb > 0) {
+      for (cl in 1:clustnb) {
+        empirical_label[clust[[cl]]$element] <- cl
+      }
     }
-    if (length(isolate) > 0) {
-      empirical_label[isolate] <- (length(clust) + 1):(length(clust) + length(isolate))
+    if (length(isolate) > 0 && clustnb > 0) {
+      empirical_label[isolate] <- (clustnb + 1):(clustnb + length(isolate))
+    } else if (length(isolate) > 0 && clustnb > 0) {
+      for (cl in 1:length(isolate)) {
+        empirical_label[isolate[[cl]]$element] <- cl
+      }
     }
     return (empirical_label)
   }

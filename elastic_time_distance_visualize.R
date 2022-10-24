@@ -44,22 +44,33 @@ standard_grid <- seq(0, 1, length.out = max(unlist(lapply(subsetlist(observed_in
   
 plot(standard_grid, example[[2]][1, 1:length(standard_grid)], type = "n",
      ylim = range(example[[2]]), xlim = c(0, 1.03),
-     xlab = "Time", ylab = "Value", main = "Aligned Univariate Functional Observations",
-     cex.main = 0.95)
+     xlab = "Time", ylab = "Value", main = "Interpolated Univariate Functional Observations",
+     cex.main = 0.87)
 
 lapply(select_index, function(l) {
-  obs_time <- common_grid[observed_index[[l]]]
+  time_index <- observed_index[[l]]
+  obs_time <- common_grid[time_index]
   update_time <- sapply(1:length(standard_grid), function(l) {
     which(abs(standard_grid[l] - obs_time) == min(abs(standard_grid[l] - obs_time)))
     })
-  lines(standard_grid, example[[2]][l, observed_index[[l]][update_time]], col = l + 1, lty = l)})
+  new_time <- c(obs_time, standard_grid)
+  rematch_index <- order(new_time, decreasing = FALSE)
+  new_obs <- c(example[[2]][l, time_index], example[[2]][l, time_index[update_time]])
+  #lines(new_time[rematch_index], new_obs[rematch_index], col = l + 1, lty = l)
+  lines(standard_grid, example[[2]][l, time_index[update_time]], col = l + 1, lty = l)
+  })
 
 lapply(select_index, function(l) {
-  obs_time <- common_grid[observed_index[[l]]]
+  time_index <- observed_index[[l]]
+  obs_time <- common_grid[time_index]
   update_time <- sapply(1:length(standard_grid), function(l) {
     which(abs(standard_grid[l] - obs_time) == min(abs(standard_grid[l] - obs_time)))
   })
-  points(standard_grid, example[[2]][l, observed_index[[l]][update_time]], col = "black", cex = 0.5)
+  new_time <- c(obs_time, standard_grid)
+  rematch_index <- order(new_time, decreasing = FALSE)
+  new_obs <- c(example[[2]][l, time_index], example[[2]][l, time_index[update_time]])
+  #points(new_time[rematch_index], new_obs[rematch_index], col = "black", cex = 0.5)
+  points(standard_grid, example[[2]][l, time_index[update_time]], col = "black", cex = 0.5)
   text(1.03, y = rev(example[[2]][l, observed_index[[l]][update_time]])[1], 
        labels = l, cex = 0.7)
   })
